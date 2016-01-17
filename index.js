@@ -1,4 +1,7 @@
 var app = require('./server');
+var wagner = require('wagner-core');
+
+require('./models')(wagner);
 
 app().listen(3000, function(err){
 	if(err){
