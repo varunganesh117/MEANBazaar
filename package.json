@@ -3,7 +3,8 @@
     "express": "4.12.3",
     "superagent": "1.2.0",
     "wagner-core": "0.1.0",
-    "mongoose": "4.0.3"
+    "mongoose": "4.0.3",
+    "http-status": "0.1.8"
   },
   "devDependencies": {
     "gulp": "3.8.11",
@@ -12,6 +13,7 @@
   },
   "scripts": {
     "test": "mocha test.js",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "meow": "mocha -R nyan test.js"
   }
 }

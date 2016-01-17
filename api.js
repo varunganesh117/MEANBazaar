@@ -1,6 +1,7 @@
 var express = require('express');
+var status = require('http-status');
 
-module.exports = function(){
+module.exports = function(wagner){
 	
 	var api = express.Router();
 
@@ -8,6 +9,22 @@ module.exports = function(){
 		res.send('Landed at page for User: ' + req.params.user + 
 		' with option : ' + req.query.option);
 	});
+
+	api.get('/category/id/:id', wagner.invoke(function(Category){
+		return function(req, res){
+			Category.findOne({_id : req.params.id}, function(err, category){
+				if(err){
+					res.status(status.INTERNAL_SERVER_ERROR).
+					json({ error : err.toString()});
+				}
+				if(!category){
+					res.status(status.NOT_FOUND).
+					json({ error : "Resource not found"});
+				}
+				res.json({ category : category });
+			});
+		};	
+	}));
 
 	return api;
 }
