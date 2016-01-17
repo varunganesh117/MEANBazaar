@@ -26,5 +26,20 @@ module.exports = function(wagner){
 		};	
 	}));
 
+	api.get('/category/parent/:id', wagner.invoke(function(Category){
+		return function(req, res){
+			Category.
+				find({ parent : req.params.id }).
+				sort({ _id : 1 }).
+				exec(function(err, categories){
+					if(err){
+						res.status(status.INTERNAL_SERVER_ERROR).
+						json({ error : err.toString()});					
+					}
+					res.json({categories : categories});
+				});
+		}
+	}));
+
 	return api;
 }

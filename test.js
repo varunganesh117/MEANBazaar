@@ -41,8 +41,26 @@ describe('MEANBazaar Test', function(){
 					assert.equal(response.category.parent, "Electronics");
 					done();
 			    });	
-			})
+			});
+	    });
 
+	    it('Gets categories by Parent id', function(done){
+			var category = {
+				_id : 'Laptop',
+				parent: 'Electronics',
+			};
+
+			Category.create(category, function(err){
+				assert.ifError(err);
+
+				superagent.get('http://localhost:3000/api/v1/category/parent/Electronics', function(error, res) {
+					assert.ifError(error);
+					assert.equal(res.status, 200);
+					var response = JSON.parse(res.text);
+					assert.equal(response.categories.length, 2);
+					done();
+			    });	
+			});
 	    });
 	});
 
