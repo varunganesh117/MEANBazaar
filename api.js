@@ -42,7 +42,7 @@ module.exports = function(wagner){
 				sort = { 'internal.approximatePriceUSD' : - 1 }
 			}
 			Product.
-				find({ 'category.ancestors' : [id] }).
+				find({ 'category.ancestors' : req.params.id }).
 				sort(sort).
 				exec(handleMany.bind(null, 'products', res));
 		};
