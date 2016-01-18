@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var categorySchema = new mongoose.Schema({
+var categorySchema = {
 	_id : String,
 	parent : {
 		type: String,
@@ -10,6 +10,7 @@ var categorySchema = new mongoose.Schema({
 		type: String,
 		ref: 'Category'
 	}]
-});
+};
 
-module.exports = categorySchema;
+module.exports = new mongoose.Schema(categorySchema);
+module.exports.categorySchema = categorySchema;
