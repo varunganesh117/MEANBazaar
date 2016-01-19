@@ -9,6 +9,8 @@ describe('MEANBazaar Test', function(){
 	var app;
 	var server;
 	var Category;
+	var Product;
+	var User;
 
 	describe('Server', function(){
 		it('Prints correct params when visting /api/v1/user', function(done){
@@ -85,7 +87,24 @@ describe('MEANBazaar Test', function(){
 					assert.equal(response.products[1].internal.approximatePriceUSD, 2000);
 					done();
 			});	
-	    })
+	    });
+
+		it('Saves a cart for the user', function(done){
+			superagent.put('http://localhost:3000/api/v1/me/cart').
+			send({ "data" : { "cart" : [{ "product" : OBJECT_ID, "quantity" : 3 }] } }).
+			end(function(err, res){
+				assert.ifError(err);
+				assert.equal(res.status, 200);
+				User.findOne({}, function(err, user){
+					assert.ifError(err);
+					assert.equal(user.data.cart.length, 1);
+					assert.equal(user.data.cart[0].product, OBJECT_ID);
+					assert.equal(user.data.cart[0].quantity, 3);
+					done();
+				});
+			});
+		});
+
 	});
 
 
@@ -95,15 +114,25 @@ describe('MEANBazaar Test', function(){
     models = require('./models')(wagner);
 
     //Get models for tests 
-    var deps = wagner.invoke(function(Category, Product){
+    var deps = wagner.invoke(function(Category, Product, User){
     	return {
     		Category : Category,
-    		Product : Product
+    		Product : Product,
+    		User : User
     	};
     })
 
     Category = deps.Category;
     Product = deps.Product;
+    User = deps.User;
+
+    app.use(function(req, res, next){
+    	User.findOne({}, function(err, user){
+    		assert.ifError(err);
+    		req.user = user;
+    		next();
+    	});
+    });
 
     app.use('/api/v1', require('./api.js')(wagner));
   	server = app.listen(3000);
@@ -115,7 +144,9 @@ describe('MEANBazaar Test', function(){
       assert.ifError(error);
       Product.remove({}, function(error) {
         assert.ifError(error);
-        done();
+        User.remove({}, function(error) {
+        	done();
+        })
       });
     });
   });
@@ -154,11 +185,25 @@ describe('MEANBazaar Test', function(){
       }
     ];
 
+    var users = [{
+    	profile: {
+    		username: 'vganesh91',
+        	picture: 'http://s1138.photobucket.com/user/shaybabe97/media/Ever/kinopoiskru-Toy-Story-151545-1.jpg.html'
+        },
+        data: {
+        	oauth: 'invalid',
+        	cart: []
+        }
+    }];
+
     Category.create(categories, function(error) {
       assert.ifError(error);
       Product.create(products, function(error) {
         assert.ifError(error);
-        done();
+        User.create(users, function(error){
+        	assert.ifError(error);
+        	done();
+        });        
       });
     });
   });
