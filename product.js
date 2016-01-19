@@ -4,6 +4,7 @@ var fx = require('./fx');
 
 var productSchema = {
 	name : { type: String, required: true },
+	pictures: [{ type: String, match: /^http:\/\//i }],
 	price : {
 		amount : {
 			type : Number,
