@@ -1,9 +1,12 @@
 var express = require('express');
 var status = require('http-status');
+var bodyparser = require('body-parser');
 
 module.exports = function(wagner){
 	
 	var api = express.Router();
+
+	api.use(bodyparser.json());
 
 	api.get('/user/:user', function(req,res){
 		res.send('Landed at page for User: ' + req.params.user + 
@@ -47,6 +50,37 @@ module.exports = function(wagner){
 				exec(handleMany.bind(null, 'products', res));
 		};
 	}));
+
+	api.put('/me/cart', wagner.invoke(function(User){
+		return function(req, res){
+			try{
+				var cart = req.body.data.cart;
+			}catch(e){
+				return res.
+				status(status.BAD_REQUEST).
+				json({ error : "Cart not provided"});
+			}
+
+			req.user.data.cart = cart;
+			req.user.save(function(err, user){
+				if(err){
+					return res.
+					status(status.INTERNAL_SERVER_ERROR).
+					json({ error : err.toString() });
+				}
+				res.json({ user : user });
+			})
+		}
+	}));
+
+	api.get('/me', function(req, res){
+		if(!req.user){
+			return res.
+			status(status.UNAUTHORIZED).
+			json({ error : "User not logged in"});
+		}
+		req.user.populate('data.cart.product', handleOne(null, 'user', res));
+	});
 
 	return api;
 };
