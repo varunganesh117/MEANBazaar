@@ -1,6 +1,7 @@
 var express = require('express');
 var status = require('http-status');
 var bodyparser = require('body-parser');
+var _ = require('underscore');
 
 module.exports = function(wagner){
 	
@@ -48,6 +49,51 @@ module.exports = function(wagner){
 				find({ 'category.ancestors' : req.params.id }).
 				sort(sort).
 				exec(handleMany.bind(null, 'products', res));
+		};
+	}));
+
+	api.post('/checkout', wagner.invoke(function(User, Stripe){
+		return function(req, res){
+			if(!req.user){
+				return res.
+				status(status.UNAUTHORIZED).
+				json({ error : "User not logged in"});
+			}
+
+			req.user.populate({ path: 'data.cart.product', model: 'Product' }, function(err, user){
+				var totalPrice = 0;
+				_.each(user.data.cart, function(item){
+					totalPrice += item.product.internal.approximatePriceUSD * item.quantity;
+				});
+
+				Stripe.charges.create({
+					amount: Math.ceil(totalPrice * 100), // amount in cents
+					currency: "usd",
+					source: req.body.stripeToken,
+					description: "Example charge for amount : " + totalPrice
+				}, function(err, charge) {
+					if(err && err.type === 'StripeCardError') {
+						return res.
+						status(status.BAD_REQUEST).
+						json({ error : err.toString() });
+					}
+					if(err){
+						return res.
+						status(status.INTERNAL_SERVER_ERROR).
+						json({ error : err.toString() });
+					}
+
+					//empty the cart upon successful checkout and save
+					req.user.cart = [];
+					req.user.save(function(err){
+						if(err){
+							console.log("WARNING, failed to clear cart : " + err.toString());
+						}
+
+						return res.json({ charge_id : charge.id });
+					});
+				});
+			});
 		};
 	}));
 
