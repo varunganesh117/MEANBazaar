@@ -1,9 +1,12 @@
 var express = require('express');
 var wagner = require('wagner-core');
 
+require('./dependencies')(wagner);
 require('./models')(wagner);
 	
 var app = express();
+
+wagner.invoke(require('./auth.js'), { app : app });
 
 app.use('/api/v1', require('./api.js')(wagner));
 
