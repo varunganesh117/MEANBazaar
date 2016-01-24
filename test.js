@@ -3,7 +3,8 @@ var assert = require('assert');
 var superagent = require('superagent');
 var wagner = require('wagner-core');
 
-var OBJECT_ID = '000000000000000000000001';
+var OBJECT_ID_1 = '000000000000000000000001';
+var OBJECT_ID_2 = '000000000000000000000002';
 
 describe('MEANBazaar Test', function(){
   var app;
@@ -12,6 +13,7 @@ describe('MEANBazaar Test', function(){
   var Product;
   var User;
   var Config;
+  var Stripe;
 
 	describe('Server', function(){
 		it('Prints correct params when visting /api/v1/user', function(done){
@@ -63,7 +65,7 @@ describe('MEANBazaar Test', function(){
 	    });
 
 	    it('Gets a product by object id', function(done){
-	    	superagent.get('http://localhost:3000/api/v1/product/id/'+ OBJECT_ID, function(error, res) {
+	    	superagent.get('http://localhost:3000/api/v1/product/id/'+ OBJECT_ID_1, function(error, res) {
 					assert.ifError(error);
 					assert.equal(res.status, 200);
 					var response;
@@ -92,23 +94,64 @@ describe('MEANBazaar Test', function(){
 
 		it('Saves a cart for the user', function(done){
 			superagent.put('http://localhost:3000/api/v1/me/cart').
-			send({ "data" : { "cart" : [{ "product" : OBJECT_ID, "quantity" : 3 }] } }).
+			send({ "data" : { "cart" : [{ "product" : OBJECT_ID_1, "quantity" : 3 }] } }).
 			end(function(err, res){
 				assert.ifError(err);
 				assert.equal(res.status, 200);
 				User.findOne({}, function(err, user){
 					assert.ifError(err);
 					assert.equal(user.data.cart.length, 1);
-					assert.equal(user.data.cart[0].product, OBJECT_ID);
+					assert.equal(user.data.cart[0].product, OBJECT_ID_1);
 					assert.equal(user.data.cart[0].quantity, 3);
 					done();
 				});
 			});
 		});
 
-    it('Config loaded successfully', function(){
+    it('Config loaded successfully', function(done){
       assert.notEqual(Config.facebookClientId, null);
       assert.notEqual(Config.facebookClientSecret, null);
+      done();
+    });
+
+    it('Can charge a card for the products in the cart', function(done){
+      this.timeout(4000);
+      var item = { product : OBJECT_ID_2, quantity : 1 };
+      User.findOne({}, function(err, user){
+        assert.ifError(err);
+        user.data.cart.push(item);
+        user.save(function(error){
+            assert.ifError(error);
+
+            superagent.post('http://localhost:3000/api/v1/checkout').
+            send({
+              stripeToken : {
+                cvc : 123,
+                number : 4242424242424242,
+                object : 'card',
+                exp_month : 09,
+                exp_year : 2017
+              }
+            }).
+            end(function(err, res){
+              assert.ifError(err);
+              assert.equal(res.status, 200);
+              var response;
+              assert.doesNotThrow(function(){
+                response = JSON.parse(res.text);
+              });
+
+              assert.ok(response.charge_id);
+
+              Stripe.charges.retrieve(response.charge_id, function(err, charge){
+                  assert.ifError(err);
+                  assert.ok(charge);
+                  assert.equal(charge.amount, 40000*3 + 200000);
+                  done();
+              });
+            });
+        });
+      });
     });
 
 	});
@@ -121,12 +164,13 @@ describe('MEANBazaar Test', function(){
     dependencies = require('./dependencies')(wagner);
 
     //Get models for tests 
-    var deps = wagner.invoke(function(Category, Product, User, Config){
+    var deps = wagner.invoke(function(Category, Product, User, Config, Stripe){
     	return {
     		Category : Category,
     		Product : Product,
     		User : User,
         Config : Config,
+        Stripe : Stripe
     	};
     })
 
@@ -134,6 +178,7 @@ describe('MEANBazaar Test', function(){
     Product = deps.Product;
     User = deps.User;
     Config = deps.Config;
+    Stripe = deps.Stripe;
 
     app.use(function(req, res, next){
     	User.findOne({}, function(err, user){
@@ -168,7 +213,7 @@ describe('MEANBazaar Test', function(){
 
     var products = [
       {
-      	_id: OBJECT_ID,
+      	_id: OBJECT_ID_1,
         name: 'Nexus 5x',
         category: { _id: 'Phones', ancestors: ['Electronics', 'Phones'] },
         price: {
@@ -177,6 +222,7 @@ describe('MEANBazaar Test', function(){
         }
       },
       {
+        _id: OBJECT_ID_2,
         name: 'Asus Zenbook Prime',
         category: { _id: 'Laptops', ancestors: ['Electronics', 'Laptops'] },
         price: {
