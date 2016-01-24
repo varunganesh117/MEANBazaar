@@ -6,11 +6,12 @@ var wagner = require('wagner-core');
 var OBJECT_ID = '000000000000000000000001';
 
 describe('MEANBazaar Test', function(){
-	var app;
-	var server;
-	var Category;
-	var Product;
-	var User;
+  var app;
+  var server;
+  var Category;
+  var Product;
+  var User;
+  var Config;
 
 	describe('Server', function(){
 		it('Prints correct params when visting /api/v1/user', function(done){
@@ -105,6 +106,11 @@ describe('MEANBazaar Test', function(){
 			});
 		});
 
+    it('Config loaded successfully', function(){
+      assert.notEqual(Config.facebookClientId, null);
+      assert.notEqual(Config.facebookClientSecret, null);
+    });
+
 	});
 
 
@@ -112,19 +118,22 @@ describe('MEANBazaar Test', function(){
   	app = express();
   	//Bootstrap server
     models = require('./models')(wagner);
+    dependencies = require('./dependencies')(wagner);
 
     //Get models for tests 
-    var deps = wagner.invoke(function(Category, Product, User){
+    var deps = wagner.invoke(function(Category, Product, User, Config){
     	return {
     		Category : Category,
     		Product : Product,
-    		User : User
+    		User : User,
+        Config : Config,
     	};
     })
 
     Category = deps.Category;
     Product = deps.Product;
     User = deps.User;
+    Config = deps.Config;
 
     app.use(function(req, res, next){
     	User.findOne({}, function(err, user){
