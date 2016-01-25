@@ -30,6 +30,19 @@ module.exports = function(wagner){
 		};
 	}));
 
+	api.get('/product/text/:query', wagner.invoke(function(Product){
+		return function(req, res){
+			Product.find({
+				'$text' : { '$search' : req.params.query }
+			},
+			{
+				score : { '$meta' : 'textScore' }
+			}).
+			sort({ score : { '$meta' : 'textScore' } }).
+			exec(handleMany.bind(null, 'products', res));
+		}
+	}));
+
 	api.get('/product/id/:id', wagner.invoke(function(Product){
 		return function(req, res){
 			Product.findOne({ _id: req.params.id }, 
