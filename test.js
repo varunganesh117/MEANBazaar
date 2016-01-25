@@ -236,7 +236,7 @@ describe('MEANBazaar Test', function(){
         category: { _id: 'Bacon', ancestors: ['Bacon'] },
         price: {
           amount: 20,
-          currency: 'USD'
+          currency: 'GBP'
         }
       }
     ];
