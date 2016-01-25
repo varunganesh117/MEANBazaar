@@ -88,6 +88,7 @@ describe('MEANBazaar Test', function(){
 					assert.equal(response.products.length, 2);
 					assert.equal(response.products[0].name, 'Nexus 5x');
 					assert.equal(response.products[1].internal.approximatePriceUSD, 2000);
+          assert.equal(response.products[1].displayPrice, '$ 2000');
 					done();
 			});	
 	    });

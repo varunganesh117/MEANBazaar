@@ -29,5 +29,22 @@ var productSchema = {
 	}
 };
 
-module.exports = new mongoose.Schema(productSchema);
+var schema = new mongoose.Schema(productSchema);
+
+schema.index({ name: 'text'});
+
+var symbols = {
+	'USD' : '$',
+	'EUR': '€',
+	'GBP': '£'
+};
+
+schema.virtual('displayPrice').get(function(){
+	return symbols[this.price.currency] + ' ' + this.price.amount;
+});
+
+schema.set('toObject', { virtuals: true });
+schema.set('toJSON', { virtuals: true });
+
+module.exports = schema;
 module.exports.productSchema = productSchema;
