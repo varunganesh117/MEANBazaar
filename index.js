@@ -10,6 +10,8 @@ wagner.invoke(require('./auth.js'), { app : app });
 
 app.use('/api/v1', require('./api.js')(wagner));
 
+app.use(express.static('angular'));
+
 app.listen(3000, function(err){
 	if(err){
 		console.log(err);
