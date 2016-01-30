@@ -138,7 +138,7 @@ module.exports = function(wagner){
 			status(status.UNAUTHORIZED).
 			json({ error : "User not logged in"});
 		}
-		req.user.populate('data.cart.product', handleOne(null, 'user', res));
+		req.user.populate({ path: 'data.cart.product', model: 'Product' }, handleOne.bind(null, 'user', res));
 	});
 
 	return api;
