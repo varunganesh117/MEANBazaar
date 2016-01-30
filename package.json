@@ -15,11 +15,14 @@
   "devDependencies": {
     "gulp": "3.8.11",
     "gulp-mocha": "2.0.1",
-    "mocha": "2.2.4"
+    "mocha": "2.2.4",
+    "browserify": "10.2.3",
+    "gulp-browserify": "0.5.1"
   },
   "scripts": {
     "test": "mocha test.js",
     "watch": "gulp watch",
-    "meow": "mocha -R nyan test.js"
+    "meow": "mocha -R nyan test.js",
+    "gen": "gulp browserify"
   }
 }
