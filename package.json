@@ -17,12 +17,18 @@
     "gulp-mocha": "2.0.1",
     "mocha": "2.2.4",
     "browserify": "10.2.3",
-    "gulp-browserify": "0.5.1"
+    "gulp-browserify": "0.5.1",
+    "karma": "0.13",
+    "karma-chai": "0.1.0",
+    "karma-chrome-launcher": "0.1.4",
+    "karma-mocha": "0.1.4"
   },
   "scripts": {
     "test": "mocha test.js",
     "watch": "gulp watch",
     "meow": "mocha -R nyan test.js",
-    "gen": "gulp browserify"
+    "gen": "gulp browserify",
+    "ngtest": "gulp ngtest",
+    "ECI": "gulp ECI"
   }
 }
