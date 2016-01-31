@@ -1,6 +1,15 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var browserify = require('gulp-browserify');
+var Server = require('karma').Server;
+
+
+gulp.task('ngtest', function (done) {
+  new Server({
+    configFile: __dirname + '/angular/karma.local.conf.js',
+    singleRun: true
+  }, done).start();
+});
 
 gulp.task('browserify', function() {
   return gulp.
@@ -29,3 +38,5 @@ gulp.task('watch', function() {
   gulp.watch(['./*.js'], ['test']);
   gulp.watch(['./angular/*.js'], ['browserify']);
 });
+
+gulp.task('ECI', ['test', 'browserify', 'ngtest']);
