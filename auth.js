@@ -54,7 +54,7 @@ module.exports = function(User, Config, app){
 	app.get('/auth/facebook/callback',
 		passport.authenticate('facebook', { failureRedirect: '/fail' }),
 		function(req, res) {
-			res.send('Welcome, ' + req.user.profile.username);
+			res.redirect('/')
 		}
 	);
 }
