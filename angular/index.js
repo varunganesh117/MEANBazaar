@@ -20,8 +20,12 @@ _.each(services, function(factory, name) {
 var app = angular.module('mean-bazaar', ['ngRoute', 'mean-bazaar.components']);
 
 app.config(function($routeProvider){
-	$routeProvider.when('/product/:productId', {
+	$routeProvider.
+	when('/product/:productId', {
 		controller : 'ProductDescController',
 		templateUrl : 'templates/product_desc.html'
+	}).
+	when('/category/:categoryId', {
+		templateUrl : 'templates/category_view.html'
 	});
 });
