@@ -34,4 +34,33 @@ exports.CategoryBarController = function($scope, $routeParams, $http){
 	setTimeout(function() {
 		$scope.$emit('CategoryBarController');
 	}, 0);
+};
+
+exports.ProductsListController = function($scope, $routeParams, $http){
+	var encodedId = encodeURIComponent($routeParams.categoryId);
+	$scope.price = undefined;
+
+	$scope.handleSortClick = function(){
+		if($scope.price == undefined){
+			$scope.price = -1;
+		}else{
+			$scope.price *= -1;
+		}
+
+		$scope.loadProducts();
+	}
+
+	$scope.loadProducts = function(){
+		var queryParams = { price : $scope.price };
+		$http.get('/api/v1/product/category/' + encodedId, { params : queryParams }).
+		success(function(data){
+			$scope.products = data.products;
+		});
+	}
+
+	$scope.loadProducts();
+
+	setTimeout(function() {
+		$scope.$emit('ProductsListController');
+	}, 0);
 }
