@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'techno'; /*a name to be used later*/
+    src: url('./Neutronium.ttf'); /*URL to font*/
+}
+
 body {
   margin: 0px;
   padding: 0px;
@@ -5,14 +10,19 @@ body {
 }
 
 a {
-  color: #CC4A14;
+  color: #3171C4;
   text-decoration: none;
+}
+
+.content-wrapper {
+  width: 980px;
+  margin: auto;
 }
 
 .add-cart-button {
   cursor: pointer;
   color: white;
-  background-color: #CC4A14;
+  background-color: #3171C4;
 }
 
 /* NavBar */
@@ -29,6 +39,7 @@ a {
   width: 1000px;
   margin: auto;
   position: relative;
+  text-align: center;
 }
 
 .nav-bar .logo {
@@ -43,8 +54,9 @@ a {
 
 .nav-bar .title {
   display: inline-block;
-  color: #CC4A14;
+  color: #3171C4;
   font-size: 30px;
+  font-family: 'techno';
   position: relative;
   top: -3px;
 }
@@ -54,7 +66,7 @@ a {
   font-size: 20px;
   right: 42px;
   top: 5px;
-  background-color: #CC4A14;
+  background-color: #3171C4;
   border-radius: 5px;
   padding: 5px;
 }
@@ -128,7 +140,7 @@ a {
 .product-desc .add-cart-button {
     border: 1px solid black;
     border-radius: 5px;
-    background-color: #CC4A14;
+    background-color: #3171C4;
     color: white;
     text-align: center;
     width: 180px;
@@ -140,24 +152,73 @@ a {
 /*Category Bar*/
 .category-dropdown {
   display: inline-block;
+  position: relative;
 }
 
-.category-dropdown > div{
+.category-dropdown .dropdown-button{
+  width: 100px;
+  text-align: right;
   display: inline-block;
+  border: 1px solid #dfdfdf;
+  padding: 2px;
+  cursor: pointer;
+  color: #3171C4;
+}
+
+.category-dropdown .dropdown-button small{
+  color: gray;
+}
+
+.category-dropdown .dropdown-list{
+  position: absolute;
+  display: inline-block;
+  width: 100px;
+  background-color: #fdfdfd;
+  padding: 2px;
+  cursor: pointer;
+  left: 9px;
+  top: 20px;
+  border: 1px solid #dfdfdf;
+  border-top: none;
+}
+
+.category-dropdown .dropdown-list div{
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px solid #DCDCDc;
 }
 
 /*Products List*/
+.products-list {
+  margin-left: -5px;
+  margin-right: -5px;
+  margin-top: 15px;
+}
+
+.products-list .sort-arrow {
+  float: right;
+  color: #666666;
+  cursor: pointer;
+  margin-bottom: 3px;
+  margin-right: 8px;
+}
+
+.products-list .sort-arrow i {
+  margin-left: 0.5em;
+}
+
 .product-card {
   border: 1px solid #BDBDBD;
   border-radius: 5px;
   padding: 5px;
-  background-color: #F7F7F7;
+  background-color: #F9F9F9;
   width: 225px;
   margin: 5px;
   float: left;
   text-align: center;
   padding-top: 10px;
   padding-bottom: 10px;
+  box-shadow: 1px 1px 1px #CCCCCC;
 }
 
 .product-card .add-cart-button {
