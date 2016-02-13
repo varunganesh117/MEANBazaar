@@ -64,3 +64,23 @@ exports.ProductsListController = function($scope, $routeParams, $http){
 		$scope.$emit('ProductsListController');
 	}, 0);
 }
+
+exports.SearchBarController = function($scope, $http) {
+	$scope.searchText = undefined;
+
+	$scope.update = function() {
+	    if($scope.searchText.trim()){
+	      var encoded = encodeURIComponent($scope.searchText);
+	      $http.get('/api/v1/product/text/' + encoded).
+	      success(function(data) {
+	        $scope.results = data.products;
+	      });
+	    }else{
+	      $scope.results = [];
+	    }
+	};
+
+	setTimeout(function() {
+		$scope.$emit('SearchBarController');
+	}, 0);
+};

@@ -27,5 +27,9 @@ app.config(function($routeProvider){
 	}).
 	when('/category/:categoryId', {
 		templateUrl : 'templates/category_view.html'
+	}).
+	when('/', {
+		controller : 'SearchBarController',
+		templateUrl : 'templates/search_bar.html'
 	});
 });

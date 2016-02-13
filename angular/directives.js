@@ -25,3 +25,10 @@ exports.productsList = function() {
 		templateUrl: '/templates/products_list.html'
 	};
 };
+
+exports.searchBar = function() {
+	return {
+		controller: 'searchBarController',
+		templateUrl: '/templates/search_bar.html'
+	};
+};
