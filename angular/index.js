@@ -31,5 +31,9 @@ app.config(function($routeProvider){
 	when('/', {
 		controller : 'SearchBarController',
 		templateUrl : 'templates/search_bar.html'
+	}).
+	when('/checkout', {
+		controller: 'CheckoutController',
+		templateUrl: 'templates/checkout.html'
 	});
 });
