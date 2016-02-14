@@ -99,6 +99,7 @@ exports.AddToCartController = function($scope, $http, $user) {
 
 		$http.put('/api/v1/me/cart', data).
 		success(function(data){
+			$user.loadUser();
 			$scope.success = true;
 		});
 	};
@@ -111,5 +112,5 @@ exports.AddToCartController = function($scope, $http, $user) {
 exports.CheckoutController = function($scope, $http, $user) {
 	$scope.user = $user;
 
-	
+
 };

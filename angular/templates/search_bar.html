@@ -1,5 +1,5 @@
 <div class="search-bar-wrapper">
-	<input class="search-bar-input" ng-model="searchText" ng-change="update()" />
+	<input class="search-bar-input" placeholder="Search Products" ng-model="searchText" ng-change="update()" />
 	<div class="autocomplete-results">
 		<div ng-repeat="result in results" class="autocomplete-result">
 			<a ng-href="#/product/{{result._id}}">
