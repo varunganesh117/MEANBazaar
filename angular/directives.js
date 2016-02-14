@@ -28,7 +28,14 @@ exports.productsList = function() {
 
 exports.searchBar = function() {
 	return {
-		controller: 'searchBarController',
+		controller: 'SearchBarController',
 		templateUrl: '/templates/search_bar.html'
 	};
 };
+
+exports.addToCart = function() {
+	return{
+		controller: 'AddToCartController',
+		templateUrl: '/templates/add_to_cart.html'
+	};
+}

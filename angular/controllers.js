@@ -84,3 +84,32 @@ exports.SearchBarController = function($scope, $http) {
 		$scope.$emit('SearchBarController');
 	}, 0);
 };
+
+exports.AddToCartController = function($scope, $http, $user) {
+	$scope.success = false;
+
+	$scope.addToCart = function(product){
+		if(!$user.user){
+			return;
+		}
+
+		$user.user.data.cart.push({ product : product._id , quantity : 1 });
+
+		var data = { data : { cart : $user.user.data.cart } };
+
+		$http.put('/api/v1/me/cart', data).
+		success(function(data){
+			$scope.success = true;
+		});
+	};
+
+	setTimeout(function() {
+		$scope.$emit('AddToCartController');
+	}, 0);
+};
+
+exports.CheckoutController = function($scope, $http, $user) {
+	$scope.user = $user;
+
+	
+};

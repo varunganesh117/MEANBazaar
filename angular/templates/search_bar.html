@@ -1,12 +1,10 @@
-<div class="search-bar">
-	<div class="search-bar-wrapper">
-		<input class="search-bar-input" ng-model="searchText" ng-change="update()" />
-		<div class="autocomplete-results">
-			<div ng-repeat="result in results" class="autocomplete-result">
-				<a ng-href="#/product/{{result._id}}">
-					{{result.name}}
-				</a>
-			</div>
+<div class="search-bar-wrapper">
+	<input class="search-bar-input" ng-model="searchText" ng-change="update()" />
+	<div class="autocomplete-results">
+		<div ng-repeat="result in results" class="autocomplete-result">
+			<a ng-href="#/product/{{result._id}}">
+				{{result.name}}
+			</a>
 		</div>
 	</div>
 </div>
